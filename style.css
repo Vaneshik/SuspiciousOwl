@@ -1,0 +1,13 @@
+li {
+  font-size: large;
+}
+
+#container {
+  display: inline;
+  margin-left: 20px;
+}
+
+#webcam {
+  height: 200px;
+  transform: rotateY(180deg);
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <!-- JS code -->
+    <script src="./face-api.js/dist/face-api.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Testing</h1>
+    <ul>
+        <li>
+            <p>onTab: <span id="1">1</span></p>
+        </li>
+        <li>
+            <p>isActive: <span id="2">1</span></p>
+        </li>
+        <li>
+            <p>isFullscreen: <span id="3">1</span></p>
+        </li>
+    </ul>
+    <input type="file" accept="image/*" onchange="loadFile(event, 'output1')" style="display: none;" id="aboba">
+    <input type="button" value="Browse File" onclick="document.getElementById('aboba').click();">
+    <img id="output1" width="200px" height="200px">
+    <input type="button" value="Calculate" onclick="calcDist()">
+
+    <div id="container">
+        <video id="webcam" autoplay></video>
+    </div>
+    <script type="text/javascript" src="main.js"></script>
+</body>
+
+</html>
