@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <!-- JS code -->
-    <script src="./Libs/face-api.js/dist/face-api.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script defer type="text/javascript" src="main.js"></script>
+    <script src="js/face-api.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/main.js" defer></script>
 
     <title>Document</title>
 </head>
@@ -23,18 +23,16 @@
         <li>
             <p>isActive: <span id="2">1</span></p>
         </li>
-        <li>
-            <p>isFullscreen: <span id="3">1</span></p>
-        </li>
     </ul>
-    <input type="file" accept="image/*" onchange="loadFile(event, 'output1')" style="display: none;" id="aboba">
-    <input type="button" value="Browse File" onclick="document.getElementById('aboba').click();">
-    <img id="output1" width="200px" height="200px">
-    <input type="button" value="Calculate" onclick="calcDist()">
 
+    <canvas id="output1"></canvas>
+
+    <input type="button" value="Take photo" id="photoBtn">
     <div id="container">
         <video id="webcam" autoplay muted></video>
     </div>
+    <p>Status: <span id="curStatus">None</span></p>
+    <p>Similarity Result: <span id="distResult"></span></p>
 </body>
 
 </html>
