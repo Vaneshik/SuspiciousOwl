@@ -1,10 +1,15 @@
 let flag = 0;
 const maxDist = 0.6;
+var canvasFace;
+var webcamFace;
+var dist = 1;
 
 const canvas = document.getElementById("output1");
 const webcam = document.getElementById("webcam");
 const photoBtn = document.getElementById("photoBtn");
 const distResult = document.getElementById("distResult");
+const onTabStatus = document.getElementById("1");
+const isActiveStatus = document.getElementById("2");
 const model_url = './models';
 
 const curStatus = document.getElementById("curStatus");
@@ -47,14 +52,14 @@ async function setStatus(id) {
     }
 };
 
-async function getDistance(img, vid) {
+async function getDistance() {
     if (!flag) {
         return 0;
     }
     try {
-        const detections = await faceapi.detectSingleFace(webcam).withFaceLandmarks().withFaceExpressions().withFaceDescriptor();
-        const aboba = await faceapi.detectSingleFace(canvas).withFaceLandmarks().withFaceExpressions().withFaceDescriptor();
-        const dist = faceapi.euclideanDistance(detections.descriptor, aboba.descriptor);
+        webcamFace = await faceapi.detectSingleFace(webcam).withFaceLandmarks().withFaceExpressions().withFaceDescriptor();
+        canvasFace = await faceapi.detectSingleFace(canvas).withFaceLandmarks().withFaceExpressions().withFaceDescriptor();
+        dist = faceapi.euclideanDistance(webcamFace.descriptor, canvasFace.descriptor);
         distResult.innerHTML = dist.toFixed(3);
         if (dist < maxDist) {
             setStatus(0);
@@ -67,15 +72,15 @@ async function getDistance(img, vid) {
     }
 };
 
-async function run(img, vid) {
-    getDistance(img, vid);
+async function run() {
+    getDistance();
     setTimeout(async () => await this.run(), 500);
 };
 
 window.addEventListener('load', function (event) {
     loadModels();
     runVideo();
-    run(canvas, webcam);
+    run();
 });
 
 photoBtn.addEventListener('click', function () {
@@ -85,16 +90,16 @@ photoBtn.addEventListener('click', function () {
 
 document.addEventListener('visibilitychange', function (event) {
     if (!document.hidden) {
-        document.getElementById("1").innerHTML = "1";
+        onTabStatus.innerHTML = "1";
     } else {
-        document.getElementById("1").innerHTML = "0";
+        onTabStatus.innerHTML = "0";
     }
 });
 
 window.addEventListener('focus', function (event) {
-    document.getElementById("2").innerHTML = "1";
+    isActiveStatus.innerHTML = "1";
 });
 
 window.addEventListener('blur', function (event) {
-    document.getElementById("2").innerHTML = "0";
+    isActiveStatus.innerHTML = "0";
 });
