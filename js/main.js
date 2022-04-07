@@ -68,10 +68,10 @@ async function getDistance() {
         .withFaceLandmarks(true)
         .withFaceDescriptors()
 
-    if (webcamFace.length > 1) {
-        setStatus(2)
-    } else if (canvasFace.length > 1) {
+    if (canvasFace.length > 1) {
         setStatus(3)
+    } else if (webcamFace.length > 1) {
+        setStatus(2)
     } else if (webcamFace[0] && canvasFace[0]) {
         dist = await faceapi.euclideanDistance(webcamFace[0].descriptor, canvasFace[0].descriptor)
         distResult.innerHTML = dist.toFixed(3)
