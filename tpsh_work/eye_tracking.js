@@ -29,6 +29,7 @@ function find_eyeball_position(end_points, cx, cy) {
         }
     }
 }
+
 function contouring(thresh, mid, img, end_points, right = false) {
     let cnts = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE);
     try {
@@ -85,7 +86,6 @@ function print_eye_pos(img, left, right) {
             }
     }
 
-
 function get_face_detector(modelFile = null, configFile = null, quantized = false) {
     if (quantized) {
         if (modelFile === null) {
@@ -135,7 +135,6 @@ function find_faces(img, model) {
         }
         return faces;
     }
-
 }
 
 let face_model = get_face_detector();
@@ -198,7 +197,6 @@ function get_squire_box(box){
     return [left_x, top_y, right_x, bottom_y];
 }
 
-
 function detect_marks(img, model, face) {
     let offset_y = Number(Math.abs((face[3] - face[1]) * 0.1));
     let box_moved = move_box(face, [0, offset_y]);
@@ -235,8 +233,6 @@ function detect_marks(img, model, face) {
     marks = marks.astype(nj.uint());
     return marks;
 }
-
-
 
 while (true) {
     let ret, img = cap.read();
