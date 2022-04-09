@@ -1,105 +1,114 @@
-let flag = 0;
-const maxDist = 0.6;
-var canvasFace;
-var webcamFace;
-var dist = 1;
+let flag = 0
+const maxDist = 0.6
+var canvasFace
+var webcamFace
+var dist = 1
 
-const canvas = document.getElementById("output1");
-const webcam = document.getElementById("webcam");
-const photoBtn = document.getElementById("photoBtn");
-const distResult = document.getElementById("distResult");
-const onTabStatus = document.getElementById("1");
-const isActiveStatus = document.getElementById("2");
-const model_url = './models';
+const canvas = document.getElementById("output1")
+const webcam = document.getElementById("webcam")
+const photoBtn = document.getElementById("photoBtn")
+const distResult = document.getElementById("distResult")
+const onTabStatus = document.getElementById("1")
+const isActiveStatus = document.getElementById("2")
+const curStatus = document.getElementById("curStatus")
+const model_url = './models'
 
-const curStatus = document.getElementById("curStatus");
 
 async function loadModels() {
-    await faceapi.loadSsdMobilenetv1Model(model_url);
-    await faceapi.loadFaceRecognitionModel(model_url);
-    await faceapi.loadFaceExpressionModel(model_url);
-    await faceapi.nets.faceLandmark68Net.loadFromUri(model_url);
-    console.log("Models are loaded");
-};
+    await faceapi.loadTinyFaceDetectorModel(model_url)
+    await faceapi.loadFaceRecognitionModel(model_url)
+    await faceapi.loadFaceExpressionModel(model_url)
+    await faceapi.loadFaceLandmarkTinyModel(model_url)
+    console.log("Models are loaded")
+}
 
 async function updateCanvasResolution(settings) {
-    canvas.width = settings.width;
-    canvas.height = settings.height;
-};
+    canvas.width = settings.width
+    canvas.height = settings.height
+}
 
 async function runVideo() {
-    const constraints = { video: true };
-    let stream = await navigator.mediaDevices.getUserMedia(constraints);
-    let stream_settings = stream.getVideoTracks()[0].getSettings();
-    webcam.srcObject = stream;
-    updateCanvasResolution(stream_settings);
-};
+    const constraints = { video: true }
+    let stream = await navigator.mediaDevices.getUserMedia(constraints)
+    let stream_settings = stream.getVideoTracks()[0].getSettings()
+    webcam.srcObject = stream
+    updateCanvasResolution(stream_settings)
+}
 
 async function setStatus(id) {
     switch (id) {
         case -1:
-            curStatus.style.backgroundColor = "red";
-            curStatus.innerHTML = "Face not Found";
-            break;
+            curStatus.style.backgroundColor = "red"
+            curStatus.innerHTML = "Face not Found"
+            break
         case 0:
-            curStatus.style.backgroundColor = "green";
-            curStatus.innerHTML = "OK";
-            break;
+            curStatus.style.backgroundColor = "green"
+            curStatus.innerHTML = "OK"
+            break
         case 1:
-            curStatus.style.backgroundColor = "red";
-            curStatus.innerHTML = "Another person";
-            break;
+            curStatus.style.backgroundColor = "red"
+            curStatus.innerHTML = "Another person"
+            break
+        case 2:
+            curStatus.style.backgroundColor = "red"
+            curStatus.innerHTML = "several people in the video"
+            break
+        case 3:
+            curStatus.style.backgroundColor = "red"
+            curStatus.innerHTML = "Several people in the photo"
+            break
     }
-};
+}
 
 async function getDistance() {
-    if (!flag) {
-        return 0;
-    }
-    try {
-        webcamFace = await faceapi.detectSingleFace(webcam).withFaceLandmarks().withFaceExpressions().withFaceDescriptor();
-        canvasFace = await faceapi.detectSingleFace(canvas).withFaceLandmarks().withFaceExpressions().withFaceDescriptor();
-        dist = faceapi.euclideanDistance(webcamFace.descriptor, canvasFace.descriptor);
-        distResult.innerHTML = dist.toFixed(3);
-        if (dist < maxDist) {
-            setStatus(0);
-        } else {
-            setStatus(1);
-        }
-    } catch (err) {
-        console.log("Face not Found (" + err + ")");
-        setStatus(-1);
-    }
-};
+    if (!flag) return
 
-async function run() {
-    getDistance();
-    setTimeout(async () => await this.run(), 500);
-};
+    webcamFace = await faceapi.
+        detectAllFaces(webcam, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks(true)
+        .withFaceDescriptors()
+
+    if (canvasFace.length > 1) {
+        setStatus(3)
+    } else if (webcamFace.length > 1) {
+        setStatus(2)
+    } else if (webcamFace[0] && canvasFace[0]) {
+        dist = await faceapi.euclideanDistance(webcamFace[0].descriptor, canvasFace[0].descriptor)
+        distResult.innerHTML = dist.toFixed(3)
+        if (dist < maxDist) { setStatus(0) } else { setStatus(1) }
+    } else {
+        setStatus(-1)
+    }
+
+}
 
 window.addEventListener('load', function (event) {
-    loadModels();
-    runVideo();
-    run();
-});
+    loadModels()
+    runVideo()
+    setInterval(getDistance, 500)
+})
 
-photoBtn.addEventListener('click', function () {
-    canvas.getContext('2d').drawImage(webcam, 0, 0, canvas.width, canvas.height);
-    flag = 1;
-});
+photoBtn.addEventListener('click', async function () {
+    canvas.getContext('2d').drawImage(webcam, 0, 0, canvas.width, canvas.height)
+    flag = 1
+    canvasFace = await faceapi
+        .detectAllFaces(canvas, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks(true)
+        .withFaceDescriptors()
+})
 
 document.addEventListener('visibilitychange', function (event) {
     if (!document.hidden) {
-        onTabStatus.innerHTML = "1";
+        onTabStatus.innerHTML = "1"
     } else {
-        onTabStatus.innerHTML = "0";
+        onTabStatus.innerHTML = "0"
     }
-});
+})
 
 window.addEventListener('focus', function (event) {
-    isActiveStatus.innerHTML = "1";
-});
+    isActiveStatus.innerHTML = "1"
+})
 
 window.addEventListener('blur', function (event) {
-    isActiveStatus.innerHTML = "0";
-});
+    isActiveStatus.innerHTML = "0"
+})
