@@ -1,0 +1,4 @@
+cv.fillConvexPoly
+cv.namewindow
+cv.createTrackbar
+cv.dnn

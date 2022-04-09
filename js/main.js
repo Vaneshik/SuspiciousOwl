@@ -13,7 +13,6 @@ const isActiveStatus = document.getElementById("2")
 const curStatus = document.getElementById("curStatus")
 const model_url = './models'
 
-
 async function loadModels() {
     await faceapi.loadTinyFaceDetectorModel(model_url)
     await faceapi.loadFaceRecognitionModel(model_url)
@@ -73,6 +72,7 @@ async function getDistance() {
     } else if (webcamFace.length > 1) {
         setStatus(2)
     } else if (webcamFace[0] && canvasFace[0]) {
+        console.log(webcamFace[0])
         dist = await faceapi.euclideanDistance(webcamFace[0].descriptor, canvasFace[0].descriptor)
         distResult.innerHTML = dist.toFixed(3)
         if (dist < maxDist) { setStatus(0) } else { setStatus(1) }
