@@ -1,5 +1,4 @@
 cv.fillConvexPoly
 cv.namewindow
 cv.createTrackbar
-
-function detect_marks
+cv.dnn
