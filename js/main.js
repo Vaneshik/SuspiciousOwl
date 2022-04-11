@@ -72,7 +72,6 @@ async function getDistance() {
     } else if (webcamFace.length > 1) {
         setStatus(2)
     } else if (webcamFace[0] && canvasFace[0]) {
-        console.log(webcamFace[0])
         dist = await faceapi.euclideanDistance(webcamFace[0].descriptor, canvasFace[0].descriptor)
         distResult.innerHTML = dist.toFixed(3)
         if (dist < maxDist) { setStatus(0) } else { setStatus(1) }

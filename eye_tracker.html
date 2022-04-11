@@ -4,15 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Test</title>
+    <script async src="js/numjs.js"></script>
+    <script async src="js/opencv.js"></script>
+    <script async src="js/tf.js"></script>
+    <script async src="js/face-api.js"></script>
+    <script src="js/normcode.js" defer></script>
 </head>
 
 <body>
     <h1>Test</h1>
-    <script type = "module" src="numjs.min.js"></script>
-    <script src="opencv.js"></script>
-    <script src = "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
-    <script src="eye_tracking.js">
-    </script>
+    <canvas id="output1"></canvas>
+    <canvas id="canvasOutput"></canvas>
+    <div id="container">
+        <video id="webcam" autoplay muted></video>
+    </div>
 </body>
 
 </html>
