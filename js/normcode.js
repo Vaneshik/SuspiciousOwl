@@ -42,8 +42,6 @@ async function main() {
     context.drawImage(webcam, 0, 0, canvas.width, canvas.height)
     img.data.set(context.getImageData(0, 0, canvas.width, canvas.height).data);
 
-
-    var dst = new cv.Mat()
     var points_left = webcamFace.landmarks.getLeftEye()
     var points_right = webcamFace.landmarks.getRightEye()
 
@@ -51,48 +49,31 @@ async function main() {
     eye_on_mask(mask, points_left)
     eye_on_mask(mask, points_right)
     cv.dilate(mask, mask, cv.Mat.ones(9, 9, cv.CV_8UC1), new cv.Point(5, 5))
-    // cv.bitwise_and(img, img, mask)
-    img.copyTo(dst, mask)
-    cv.cvtColor(dst, dst, cv.COLOR_BGR2GRAY)
-    var dest = new cv.Mat()
-    var f = 77
-    cv.threshold(dst, dest, f , 255, cv.THRESH_BINARY)
-    // console.log(dest)
-    // cv.erode(dest, dest, cv.Mat.ones(3, 3, cv.CV_8UC1), new cv.Point(-1, -1), 2)
-    // cv.dilate(dest, dest, cv.Mat.ones(3, 3, cv.CV_8UC1), new cv.Point(-1, -1), 4)
-    // cv.erode(dest, dest, new cv.Mat.ones(3, 3, cv.CV_8UC1), new cv.Point(-1, -1), 2)
-    // cv.dilate(dest, dest, new cv.Mat.ones(3, 3, cv.CV_8UC1), new cv.Point(-1, -1), 4)
-    // cv.medianBlur(dest, dest, 3)
-    // cv.bitwise_not(dest, dest)
-    cv.imshow("canvasOutput", dest)
+    var eyes = new cv.Mat()
+    cv.bitwise_and(img, img, eyes, mask)
 
-    // var dst = new cv.Mat()
-    // img.copyTo(dst, mask)
-    // cv.cvtColor(dst, dst, cv.COLOR_BGR2GRAY)
-    // cv.imshow("canvasOutput", dst) // canvasOutput is the id of another <canvas>;
-    // kernel = cv.Mat.ones(9, 9, cv.CV_8UC1)
-    // var maskDst = new cv.Mat();
-    // cv.dilate(mask, maskDst, kernel, new cv.Point(-1, -1), 5)
-    // var eyes = new cv.Mat();
-    // cv.bitwise_and(img, img, eyes, maskDst) 
-    // mask = (eyes == [0, 0, 0]).all(axis = 2)
-    // eyes[mask] = [255, 255, 255]
-    // let dst = new cv.Mat(height, width, cv.CV_8UC1)
-    // eyes_gray = cv.cvtColor(eyes, dst, cv.COLOR_BGR2GRAY)
-    // cv.imshow("canvasOutput", eyes) // canvasOutput is the id of another <canvas>;
+    console.log(eyes.rows + " " + eyes.cols)
+    for (var row = 0; row < eyes.rows; row++) {
+        for (var col = 0; col < eyes.cols; col++) {
+            let pixel = eyes.ucharPtr(row, col);
+            if (pixel[0] == 0 && pixel[1] == 0 && pixel[2] == 0) {
+                pixel[0] = 255
+                pixel[1] = 255
+                pixel[2] = 255
+            }
+        }
+    }
+
+    cv.cvtColor(eyes, eyes, cv.COLOR_BGR2GRAY)
+    cv.threshold(eyes, eyes, 75, 255, cv.THRESH_BINARY)
+    cv.imshow("canvasOutput", eyes)
 }
-// function processVideo() {
-//     canvas.width = width
-//     canvas.height = height
-//     let context = canvas.getContext("2d")
-//     let src = new cv.Mat(height, width, cv.CV_8UC4)
-//     let dst = new cv.Mat(height, width, cv.CV_8UC1)
-//     context.drawImage(webcam, 0, 0, canvas.width, canvas.height)
-//     src.data.set(context.getImageData(0, 0, canvas.width, canvas.height).data);
-//     cv.cvtColor(src, dst, cv.COLOR_BGR2GRAY);
-//     cv.imshow("canvasOutput", dst); // canvasOutput is the id of another <canvas>;
-// }
-
+function process_thresh(thresh) {
+    cv2.erode(thresh, thresh, new cv.Mat.zeros(3, 3), cv.CV_8UC1, new cv.Point(-1, -1), 2)
+    cv2.dilate(thresh, thresh, new cv.Mat.zeros(3, 3), cv.CV_8UC1, new cv.Point(-1, -1), 4)
+    cv2.medianBlur(thresh, thresh, 3)
+    cv2.bitwise_not(thresh, thresh)
+}
 window.addEventListener('load', async function (event) {
     await loadModels()
     runVideo()
