@@ -48,7 +48,7 @@ async function main() {
     var mask = cv.Mat.zeros(height, width, cv.CV_8UC1)
     eye_on_mask(mask, points_left)
     eye_on_mask(mask, points_right)
-    // cv.dilate(mask, mask, cv.Mat.ones(9, 9, cv.CV_8UC1), new cv.Point(7, 7))
+    // cv.dilate(mask, mask, cv.Mat.ones(9, 9, cv.CV_8UC1), new cv.Point(5,5)   )
 
     var eyes = new cv.Mat()
     var mid = Math.floor((points_left[3][0] + points_left[0][0]) / 2)
@@ -80,24 +80,24 @@ function contouring(thresh, mid, img) {
     // if (right) {
     //     cx += mid
     // }
-    cv.imshow("canvasOutput", hierarchy)
+    // cv.imshow("canvasOutput", hierarchy)
     // pos = find_eyeball_position(end_points, cx, cy)
     // return pos
 }
 
-function find_eyeball_position(end_points, cx, cy) {
-    x_ratio = (end_points[0] - cx) / (cx - end_points[2])
-    y_ratio = (cy - end_points[1]) / (end_points[3] - cy)
-    if (x_ratio > 3) {
-        return 1
-    } else if (x_ratio < 0.33) {
-        return 2
-    } else if (y_ratio < 0.33) {
-        return 3
-    } else {
-        return 0
-    }
-}
+// function find_eyeball_position(end_points, cx, cy) {
+//     x_ratio = (end_points[0] - cx) / (cx - end_points[2])
+//     y_ratio = (cy - end_points[1]) / (end_points[3] - cy)
+//     if (x_ratio > 3) {
+//         return 1
+//     } else if (x_ratio < 0.33) {
+//         return 2
+//     } else if (y_ratio < 0.33) {
+//         return 3
+//     } else {
+//         return 0
+//     }
+// }
 
 function black2white(eyes) {
     for (var row = 0; row < eyes.rows; row++) {
@@ -122,6 +122,6 @@ function process_thresh(thresh) {
 window.addEventListener('load', async function (event) {
     await loadModels()
     runVideo()
-    setInterval(main, 200)
+    setInterval(main, 500)
 })
 
