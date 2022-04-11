@@ -1,0 +1,10 @@
+#webcam {
+    transform: rotateY(180deg);
+  }
+  
+#output1 {
+    transform: rotateY(180deg);
+}
+#canvasOutput {
+    transform: rotateY(180deg);
+  }
