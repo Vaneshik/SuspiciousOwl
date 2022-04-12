@@ -161,7 +161,7 @@ function getAngle(pos){
     }else {
         angle2 = Math.asin(1) * 180 / Math.PI;
     }
-
+ 
     let dist_a = Math.atan(angle1 * Math.PI / 180) * dist_y
     let dist_b = length2 - dist_a
     return [angle_yaxis, Math.max(dist_a, dist_b)]
