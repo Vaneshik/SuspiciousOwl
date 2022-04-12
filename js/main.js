@@ -74,7 +74,7 @@ async function getDistance() {
         setStatus(2)
     } else if (webcamFace[0] && canvasFace[0]) {
         var angle = getAngle(webcamFace[0].landmarks.positions)
-        console.log(dist)
+        console.log(angle)
         dist = await faceapi.euclideanDistance(webcamFace[0].descriptor, canvasFace[0].descriptor)
         distResult.innerHTML = dist.toFixed(3)
         if (dist < maxDist) { setStatus(0) } else { setStatus(1) }
@@ -110,16 +110,16 @@ document.addEventListener('visibilitychange', function (event) {
 
 function getAngle(pos){
 
-    let x_nose = pos[33][0]; let y_nose = pos[33][1];
+    let x_nose = pos[33].x; let y_nose = pos[33][1];
 
-    let x_left = pos[0][0]; let y_left = pos[0][1];
-    let x_right = pos[16][0]; let y_right = pos[16][1];
+    let x_left = pos[1].x; let y_left = pos[1].y;
+    let x_right = pos[15].x; let y_right = pos[15].y;
 
-    let x_reye = pos[45][0]; let y_reye = pos[45][1];
-    let x_leye = pos[36][0]; let y_leye = pos[36][1];
+    let x_reye = pos[45].x; let y_reye = pos[45].y;
+    let x_leye = pos[36].x; let y_leye = pos[36].y;
     
-    let x_rmouse = pos[54][0]; let y_rmouse = pos[54][1];
-    let x_lmouse = pos[48][0]; let y_lmouse = pos[48][1];
+    let x_rmouse = pos[54].x; let y_rmouse = pos[54].y;
+    let x_lmouse = pos[48].x; let y_lmouse = pos[48].y;
     
     
     let x_mid_eye = (x_reye + x_leye) / 2;
@@ -156,7 +156,7 @@ function getAngle(pos){
 
     let dist_a = Math.atan(angle1 * Math.PI / 180) * dist_y
     let dist_b = length2 - dist_a
-    return Math.min(angle1, angle2)
+    return angle_yaxis
 }
 
 
