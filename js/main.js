@@ -74,7 +74,7 @@ function getAngle(pos) {
     }
     let dist_a = Math.atan(angle1 * Math.PI / 180) * dist_y
     let dist_b = length2 - dist_a
-    return [angle_yaxis, Math.max(dist_a, dist_b)]
+    return angle_yaxis
 }
 
 async function loadModels() {
@@ -138,9 +138,9 @@ async function getDistance() {
         setStatus(2)
     } else if (webcamFace[0] && canvasFace[0]) {
         var angle = getAngle(webcamFace[0].landmarks.positions)
-        headStatus.innerHTML = angle
+        headStatus.innerHTML = angle.toFixed(3)
         dist = await faceapi.euclideanDistance(webcamFace[0].descriptor, canvasFace[0].descriptor)
-        distResult.innerHTML = dist.toFixed(3)
+        distResult.innerHTML = (1 - dist).toFixed(3)
         if (dist < maxDist) {
             setStatus(0)
         } else {
@@ -180,9 +180,9 @@ async function findSmarphone() {
             y2 *= 480
             width = x2 - x1;
             height = y2 - y1;
-            const score = scores_data[i].toFixed(2);
-            if (score >= 0.57) {
-                phoneStatus.innerHTML = "Found"
+            const score = scores_data[i].toFixed(3);
+            if (score >= 0.7) {
+                phoneStatus.innerHTML = "Found ( " + score + " )"
             } else {
                 smartphoneNotFound()
                 phoneStatus.innerHTML = "Not Found"
