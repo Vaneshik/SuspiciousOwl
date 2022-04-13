@@ -162,7 +162,7 @@ async function getDistance() {
         setStatus(2)
     } else if (webcamFace[0] && canvasFace[0]) {
         var angle = getAngle(webcamFace[0].landmarks.positions)
-        headStatus.innerHTML = angle.toFixed(3)
+        headStatus.innerHTML = angle.map(a => a.toFixed(3));
         dist = await faceapi.euclideanDistance(webcamFace[0].descriptor, canvasFace[0].descriptor)
         distResult.innerHTML = (1 - dist).toFixed(3)
         if (dist < maxDist) {
