@@ -64,7 +64,7 @@ h1 {
     align-items: flex-start;
 }
 
-.viewport #webcam {
+.viewport #webcam { 
     grid-area: viewport;
     background-color: #000;
     height: 25.1em;
@@ -106,4 +106,14 @@ h1 {
     height: 350px;
     margin-right: 20px;
     transform: rotateY(180deg);
-  }
+}
+
+#photoBtn {
+    line-height: 1em;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
