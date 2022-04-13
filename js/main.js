@@ -65,7 +65,6 @@ async function loadModels() {
     await faceapi.loadFaceRecognitionModel(model_url)
     await faceapi.loadFaceExpressionModel(model_url)
     await faceapi.loadFaceLandmarkTinyModel(model_url)
-    model = await tf.loadGraphModel(tfPath);
     console.log("Models are loaded")
 }
 
@@ -129,19 +128,15 @@ async function getDistance() {
     }
 
 }
-async function getStats(){
-    await getDistance()
-    await findSmarphone()
-}
 
 async function findSmarphone() {
     image = tf.browser.fromPixels(canVideo)
-    // image.print()
+    // image.print
     input = tf.tidy(() => {
         return tf.image
             .resizeBilinear(image, [640, 640])
             .div(255.0).
-            expandDims(0)
+            expandDims(0);
     })
     await model.executeAsync(input).then(res => {
         const [boxes, scores, classes, valid_detections] = res
@@ -168,7 +163,7 @@ async function findSmarphone() {
             if (score >= 0.57) {
                 // ctx.strokeRect(x1, y1, width, height);
                 phoneStatus.innerHTML = "Found"
-                console.log([x1, y1])
+                // console.log([x1, y1])
 
             } else {
                 // smartphoneNotFound()
@@ -176,6 +171,11 @@ async function findSmarphone() {
             }
         }
     })
+}
+
+async function getStats() {
+    await getDistance()
+    await findSmarphone()
 }
 
 function smartphoneNotFound() {
@@ -195,12 +195,11 @@ function drawImge() {
 }
 
 // Event Handlers
-window.addEventListener('load', function () {
-    loadModels()
+window.addEventListener('load', async function () {
+    model = await tf.loadGraphModel(tfPath)
+    await loadModels()
     runVideo()
     setTimeout(drawImge, 300)
-    // checkFullwindow()
-    // checkOnTab()
     setInterval(getStats, 1000)
 })
 
@@ -229,6 +228,9 @@ function checkFullwindow() {
     }
 }
 
+document.addEventListener('visibilitychange', checkOnTab)
+window.addEventListener('resize', checkFullwindow)
+
 photoBtn.addEventListener('click', async function () {
     canvas.getContext('2d').drawImage(webcam, 0, 0, canvas.width, canvas.height)
     flag = 1
@@ -237,6 +239,3 @@ photoBtn.addEventListener('click', async function () {
         .withFaceLandmarks(true)
         .withFaceDescriptors()
 })
-
-document.addEventListener('visibilitychange', checkOnTab)
-window.addEventListener('resize', checkFullwindow)

@@ -1,4 +1,5 @@
 // const handler = tfn.io.fileSystem("./best_web_model/model.json");
+
 const img = document.getElementById('img');
 const webcam = document.getElementById('webcam');
 const path = "./best_web_model/model.json"
