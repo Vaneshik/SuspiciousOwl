@@ -13,25 +13,36 @@ const isActiveStatus = document.getElementById("2")
 const isFullwindow = document.getElementById("3")
 const curStatus = document.getElementById("curStatus")
 const phoneStatus = document.getElementById("phoneStatus")
-const model_url = './models'
+const headStatus = document.getElementById("headStatus")
 
+const model_url = './models'
 const tfPath = "./best_web_model/model.json"
 
 var canVideo = document.getElementById("canV");
 var ctx = canVideo.getContext('2d')
 
-var x1 = 0, y1 = 0, width = 0, height = 0
+var x1 = 0,
+    y1 = 0,
+    width = 0,
+    height = 0
 var image, camera, model, input
 
 
 function getAngle(pos) {
-    let x_nose = pos[33].x; let y_nose = pos[33].y;
-    let x_left = pos[1].x; let y_left = pos[1].y;
-    let x_right = pos[15].x; let y_right = pos[15].y;
-    let x_reye = pos[45].x; let y_reye = pos[45].y;
-    let x_leye = pos[36].x; let y_leye = pos[36].y;
-    let x_rmouse = pos[54].x; let y_rmouse = pos[54].y;
-    let x_lmouse = pos[48].x; let y_lmouse = pos[48].y;
+    let x_nose = pos[33].x;
+    let y_nose = pos[33].y;
+    let x_left = pos[1].x;
+    let y_left = pos[1].y;
+    let x_right = pos[15].x;
+    let y_right = pos[15].y;
+    let x_reye = pos[45].x;
+    let y_reye = pos[45].y;
+    let x_leye = pos[36].x;
+    let y_leye = pos[36].y;
+    let x_rmouse = pos[54].x;
+    let y_rmouse = pos[54].y;
+    let x_lmouse = pos[48].x;
+    let y_lmouse = pos[48].y;
     let x_mid_eye = (x_reye + x_leye) / 2;
     let y_mid_eye = (y_reye + y_leye) / 2;
     let x_mid_mouse = (x_rmouse + x_lmouse) / 2;
@@ -51,10 +62,16 @@ function getAngle(pos) {
     let k = (y_right - y_left) / (x_right - x_left);
     let b = (y_right - k * x_right);
     let dist_y = Math.abs(k * x_nose - y_nose + b) / Math.sqrt(k ** 2 + 1);
-    if (dist_y <= lenght1) { angle1 = Math.asin(dist_y / lenght1) * 180 / Math.PI }
-    else { angle1 = Math.asin(1) * 180 / Math.PI; }
-    if (dist_y <= lenght3) { angle2 = Math.asin(dist_y / lenght3) * 180 / Math.PI }
-    else { angle2 = Math.asin(1) * 180 / Math.PI }
+    if (dist_y <= lenght1) {
+        angle1 = Math.asin(dist_y / lenght1) * 180 / Math.PI
+    } else {
+        angle1 = Math.asin(1) * 180 / Math.PI;
+    }
+    if (dist_y <= lenght3) {
+        angle2 = Math.asin(dist_y / lenght3) * 180 / Math.PI
+    } else {
+        angle2 = Math.asin(1) * 180 / Math.PI
+    }
     let dist_a = Math.atan(angle1 * Math.PI / 180) * dist_y
     let dist_b = length2 - dist_a
     return [angle_yaxis, Math.max(dist_a, dist_b)]
@@ -74,7 +91,9 @@ async function updateCanvasResolution(settings) {
 }
 
 async function runVideo() {
-    const constraints = { video: 1 }
+    const constraints = {
+        video: 1
+    }
     let stream = await navigator.mediaDevices.getUserMedia(constraints)
     let stream_settings = stream.getVideoTracks()[0].getSettings()
     webcam.srcObject = stream
@@ -110,7 +129,7 @@ async function setStatus(id) {
 async function getDistance() {
     if (!flag) return
     webcamFace = await faceapi.
-        detectAllFaces(webcam, new faceapi.TinyFaceDetectorOptions())
+    detectAllFaces(webcam, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks(true)
         .withFaceDescriptors()
     if (canvasFace.length > 1) {
@@ -119,10 +138,14 @@ async function getDistance() {
         setStatus(2)
     } else if (webcamFace[0] && canvasFace[0]) {
         var angle = getAngle(webcamFace[0].landmarks.positions)
-        // console.log(angle)
+        headStatus.innerHTML = angle
         dist = await faceapi.euclideanDistance(webcamFace[0].descriptor, canvasFace[0].descriptor)
         distResult.innerHTML = dist.toFixed(3)
-        if (dist < maxDist) { setStatus(0) } else { setStatus(1) }
+        if (dist < maxDist) {
+            setStatus(0)
+        } else {
+            setStatus(1)
+        }
     } else {
         setStatus(-1)
     }
@@ -131,12 +154,11 @@ async function getDistance() {
 
 async function findSmarphone() {
     image = tf.browser.fromPixels(canVideo)
-    // image.print
     input = tf.tidy(() => {
         return tf.image
             .resizeBilinear(image, [640, 640])
             .div(255.0).
-            expandDims(0);
+        expandDims(0);
     })
     await model.executeAsync(input).then(res => {
         const [boxes, scores, classes, valid_detections] = res
@@ -158,15 +180,11 @@ async function findSmarphone() {
             y2 *= 480
             width = x2 - x1;
             height = y2 - y1;
-            console.log([x1, y1])
             const score = scores_data[i].toFixed(2);
             if (score >= 0.57) {
-                // ctx.strokeRect(x1, y1, width, height);
                 phoneStatus.innerHTML = "Found"
-                // console.log([x1, y1])
-
             } else {
-                // smartphoneNotFound()
+                smartphoneNotFound()
                 phoneStatus.innerHTML = "Not Found"
             }
         }
@@ -183,7 +201,6 @@ function smartphoneNotFound() {
     y1 = 0
     width = 0
     height = 0
-    console.log("Smartphone not found")
 }
 
 function drawImge() {
@@ -195,20 +212,20 @@ function drawImge() {
 }
 
 // Event Handlers
-window.addEventListener('load', async function () {
+window.addEventListener('load', async function() {
     model = await tf.loadGraphModel(tfPath)
     await loadModels()
-    runVideo()
+    await runVideo()
     setTimeout(drawImge, 300)
     setInterval(getStats, 1000)
 })
 
 
-window.addEventListener('focus', function () {
+window.addEventListener('focus', function() {
     isActiveStatus.innerHTML = "1"
 })
 
-window.addEventListener('blur', function () {
+window.addEventListener('blur', function() {
     isActiveStatus.innerHTML = "0"
 })
 
@@ -231,7 +248,7 @@ function checkFullwindow() {
 document.addEventListener('visibilitychange', checkOnTab)
 window.addEventListener('resize', checkFullwindow)
 
-photoBtn.addEventListener('click', async function () {
+photoBtn.addEventListener('click', async function() {
     canvas.getContext('2d').drawImage(webcam, 0, 0, canvas.width, canvas.height)
     flag = 1
     canvasFace = await faceapi

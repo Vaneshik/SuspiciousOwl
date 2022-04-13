@@ -1,5 +1,3 @@
-/* #Работаю за еду */
-
 body {
     font-size: 1.5vw;
     font-family: 'Gruppo', cursive;
@@ -66,15 +64,15 @@ h1 {
     align-items: flex-start;
 }
 
-.viewport, #webcam {
+.viewport #webcam {
     grid-area: viewport;
-    /* background-color: #000; */
+    background-color: #000;
     height: 25.1em;
     width: 33.4em;
     border-radius: 1em;
 }
 
-.viewport, #take_photo {
+.viewport #take_photo {
     height: 15em;
 }
 
