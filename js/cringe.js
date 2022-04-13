@@ -7,11 +7,10 @@ var ctx = canvas.getContext('2d')
 var x1 = 0, y1 = 0, width = 0, height = 0
 var image, camera, model, input
 
-async function load_model() {
-
-    const model = await tf.loadGraphModel(path);
-    return model;
-}
+// async function load_model() {
+//     const model = await tf.loadGraphModel(path);
+//     return model;
+// }
 
 async function runVideo() {
     const constraints = { video: 1 }

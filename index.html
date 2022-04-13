@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-    <!-- #Работаю за еду -->
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="Proktoring" content="width=device-width, initial-scale=1.0">
+    <title>SuspiciousOwl</title>
+
+    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gruppo&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./zeroing.css">
-    <link rel="stylesheet" href="./style.css">
-    <title>Document</title>
+
+    <!-- CSS -->
+    <!-- <link rel="stylesheet" href="./zeroing.css">
+    <link rel="stylesheet" href="./style.css"> -->
+
+    <!-- JS -->
+    <script src="js/face-api.js"></script>
+    <script src="js/tf.js"></script>
+    <!-- <script src="js/jquery.js"></script> -->
     <script src="js/main.js" defer></script>
-    <script src="js/face-api.js"></script> 
 </head>
+
 <body>
     <div class="wrapper">
         <header>
@@ -23,11 +32,17 @@
             <div class="stats-header">
                 <div class="stats-item">On tab: <span id="1">1</span></div>
                 <div class="stats-item">Is active: <span id="2">1</span></div>
-                <div class="stats-item">Fullwindow: MAKSIM!!!</div>
+                <div class="stats-item">Fullwindow: <span id="3">1</span></div>
             </div>
             <div class="viewport">
                 <canvas id="output1"></canvas>
                 <video id="webcam" autoplay muted></video>
+                <!-- <video id="webcam" autoplay muted></video> -->
+                <!-- <video id="webcam" autoplay muted></video> -->
+                <!-- <canvas width="640" height="480" id="output1"></canvas>
+                 -->
+                 <canvas width="640" height="480" id="canV"></canvas>
+
             </div>
             <div class="photo">
                 <div class="viewport" id="take_photo"></div>
@@ -35,10 +50,11 @@
             </div>
             <div class="stats-bottom">
                 <div class="stats-item">Face status: </span><span id="curStatus">Loading...</span></div>
-                <div class="stats-item">Phone status: Detected</div>
+                <div class="stats-item">Phone status: <span id="phoneStatus">undefined</span></div>
                 <div class="stats-item">Score: <span id="distResult"></div>
             </div>
         </div>
     </div>
 </body>
+
 </html>
