@@ -15,8 +15,8 @@ const curStatus = document.getElementById("curStatus")
 const phoneStatus = document.getElementById("phoneStatus")
 const headStatus = document.getElementById("headStatus")
 
-const model_url = './models'
-const tfPath = "./best_web_model/model.json"
+const model_url = 'models'
+const tfPath = "models/best_web_model/model.json"
 
 var canVideo = document.getElementById("canV");
 var ctx = canVideo.getContext('2d')
